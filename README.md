@@ -1,4 +1,4 @@
-#Bitfinex Chrome Extension – calculate amount automatically
+# Bitfinex Chrome Extension – calculate amount automatically
 
 <img alt="Calculate amount example" src="./example.gif" width="360">
 
