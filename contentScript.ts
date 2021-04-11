@@ -1,68 +1,61 @@
-async function ready(): Promise<HTMLInputElement | null>{
-    return new Promise((resolve, reject) => {
-        let attempt    = 0
-        const interval = setInterval(() => {
-            const amountinput2 = document.getElementById('amountinput2')
+const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")!.set!
 
-            if(amountinput2){
-                resolve(amountinput2 as HTMLInputElement)
-                clearInterval(interval)
-            }
+// Start
+// ----------------------------------------------------
 
-            // ----------------------------------------------------
-
-            attempt++
-
-            if(attempt === 12){
-                resolve(null)
-                clearInterval(interval)
-                return
-            }
-
-            // ----------------------------------------------------
-
-        }, 300)
-    })
-}
-
-const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")!.set!;
+// This is needed due to navigation without reloading a page, so we need to init again
+setInterval(init, 1000)
 
 // ----------------------------------------------------
 
-(async () => {
-    const amountinput2 = await ready()
-    const priceinput1  = document.getElementById('priceinput1') as (HTMLInputElement | null)
+function init(){
+    hidePayLessFeesNotice()
+    const amountinput = document.querySelector('[id^="amountinput"]') as (HTMLInputElement | null)
+    const priceinput  = document.querySelector('[id^="priceinput"]') as (HTMLInputElement | null)
+    const isInited    = window['usdinput'] || window['calcbtn']
 
-    if(!amountinput2 || !priceinput1)
-        return console.log('[Bitfinex extension]: #priceinput1 or #amountinput2 not found')
+    // Quit if there is no amount or price input, or if it's already inited
+    if(!amountinput || !priceinput || isInited)
+        return
 
-    priceinput1.insertAdjacentHTML('afterend',
-        '<input type="number" autocomplete="off" id="usdinput3" min="1" value="100" style="margin-top: 10px;">')
+    // ----------------------------------------------------
 
-    amountinput2.insertAdjacentHTML('afterend',
+    priceinput.insertAdjacentHTML('afterend',
+        '<input type="number" autocomplete="off" id="usdinput" min="1" value="100" style="margin-top: 10px;">')
+
+    amountinput.insertAdjacentHTML('afterend',
         '<button type="button" id="calcbtn" class="ui-button" style="margin-top: 10px;width: calc(100% - 1px);">Calculate️</button>')
 
-    const usdinput3 = document.getElementById('usdinput3') as HTMLInputElement
-    const calcbtn   = document.getElementById('calcbtn') as HTMLButtonElement
+    const usdinput = document.getElementById('usdinput') as HTMLInputElement
+    const calcbtn  = document.getElementById('calcbtn') as HTMLButtonElement
 
     // ----------------------------------------------------
 
     const calculate = function(){
         calcbtn.blur()
-        const price  = parseFloat(priceinput1.value)
-        const usd    = parseFloat(usdinput3.value)
+        const price  = parseFloat(priceinput.value)
+        const usd    = parseFloat(usdinput.value)
         const amount = Math.round(usd / price * 1000000) / 1000000
 
         if(isNaN(amount))
             return console.warn('[Bitfinex extension]: Amount is NaN, some fields are not valid or empty.')
 
-        nativeInputValueSetter.call(amountinput2, amount)
+        nativeInputValueSetter.call(amountinput, amount)
         const amountInputEvent = new Event('input', {bubbles: true})
-        amountinput2.dispatchEvent(amountInputEvent)
+        amountinput.dispatchEvent(amountInputEvent)
     }
 
     calcbtn.addEventListener('click', calculate)
-    usdinput3.addEventListener('input', calculate)
-    usdinput3.addEventListener('change', calculate)
+    usdinput.addEventListener('input', calculate)
+    usdinput.addEventListener('change', calculate)
+}
 
-})()
+function hidePayLessFeesNotice(){
+    const link = document.querySelector('.notice [href*="Less-Trading-Fees"]')
+
+    if(!link)
+        return
+
+    const notice         = link.closest('.notice') as HTMLDivElement
+    notice.style.display = 'none'
+}
