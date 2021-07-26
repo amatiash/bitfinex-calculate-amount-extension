@@ -14,7 +14,7 @@ function init() {
     if (!amountinput || !priceinput || isInited)
         return;
     // ----------------------------------------------------
-    priceinput.insertAdjacentHTML('afterend', '<input type="number" autocomplete="off" id="usdinput" min="1" value="100" style="margin-top: 10px;">');
+    priceinput.insertAdjacentHTML('afterend', '<input type="number" class="ui-input" autocomplete="off" id="usdinput" min="1" value="100" style="margin-top: 10px;">');
     amountinput.insertAdjacentHTML('afterend', '<button type="button" id="calcbtn" class="ui-button" style="margin-top: 10px;width: calc(100% - 1px);">Calculate️</button>');
     const usdinput = document.getElementById('usdinput');
     const calcbtn = document.getElementById('calcbtn');
