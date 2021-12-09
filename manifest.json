@@ -1,7 +1,7 @@
 {
   "name": "Bitfinex - Calculate amount automatically",
   "description": "Calculate amount automatically instead of figuring out it manually. Just specify how mush you want to buy.",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "manifest_version": 3,
   "content_scripts": [
     {
@@ -10,6 +10,9 @@
       ],
       "js": [
         "contentScript.js"
+      ],
+      "css": [
+        "bitfinex.css"
       ]
     }
   ],
