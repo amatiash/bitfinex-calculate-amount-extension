@@ -1,4 +1,6 @@
 .balances-overview-wrap .notice,
+.pulses,
+.pulses__exchange,
 .global-message,
 .pulse-sidebar__wrapper {
     display: none !important;
