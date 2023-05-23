@@ -2,6 +2,8 @@
 .pulses,
 .pulses__exchange,
 .global-message,
+[data-qa-id="header-dropdown-subaccounts"] > li:nth-child(2),
+[data-qa-id="header-dropdown-subaccounts"] > li:last-child,
 .pulse-sidebar__wrapper {
     display: none !important;
 }
